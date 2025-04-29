@@ -113,7 +113,7 @@ export default {
           byteArray[i] = binaryData.charCodeAt(i);
         }
 
-        const blob = new Blob([binaryData], { type: "application/pdf" });
+        const blob = new Blob([byteArray], { type: "application/pdf" });
         const url = window.URL.createObjectURL(blob);
 
         // Detect Safari
