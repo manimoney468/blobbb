@@ -113,21 +113,21 @@ export default {
           byteArray[i] = binaryData.charCodeAt(i);
         }
 
-        const blob = new Blob([byteArray], { type: "application/pdf" });
-        const url = URL.createObjectURL(blob);
+        const blob = new Blob([base64Data], { type: "application/pdf" });
+        const url = window.URL.createObjectURL(blob);
 
         // Detect Safari
         const isSafari = /^((?!chrome|android).)*safari/i.test(navigator.userAgent);
         console.log("Is Safari:", isSafari);  // Log to check if it's Safari
 
-        if (isSafari) {
+        if (true) {
           // Fallback for Safari: Use download link instead of opening in new tab
-          const a = document.createElement("a");
-          a.href = url;
-          a.download = name;
-          document.body.appendChild(a);
-          a.click();
-          document.body.removeChild(a);
+          let link = document.createElement("a");
+          link.href = url;
+          link.download = name;
+          // document.body.appendChild(a);
+          link.click();
+          // document.body.removeChild(a);
           // setTimeout(() => URL.revokeObjectURL(url), 5000); // Clean up URL
         } else {
           // For other browsers
