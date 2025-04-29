@@ -127,7 +127,7 @@ export default {
           link.download = name;
           document.body.appendChild(a);
           link.click();
-          // document.body.removeChild(a);
+          document.body.removeChild(a);
           // setTimeout(() => URL.revokeObjectURL(url), 5000); // Clean up URL
         } else {
           // For other browsers
