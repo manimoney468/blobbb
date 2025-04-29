@@ -98,7 +98,7 @@ export default {
 
 
 <template>
-  <button @click="downloadPDF">Download ----- </button>
+  <button @click="downloadPDF">Download ---hhdshdhd-- </button>
 </template>
 
 <!-- <script>
