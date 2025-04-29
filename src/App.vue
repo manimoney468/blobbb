@@ -1,7 +1,3 @@
-
-
-
-
 <template>
   <div>
     <button @click="downloadPdf">Download PDF</button>
@@ -28,21 +24,37 @@ MDA5MCAwMDAwMCBuIAowMDAwMDAwMTgxIDAwMDAwIG4gCjAwMDAwMDAyMzIgMDAwMDAgbiAKMDAw
 MDAwMDM0MCAwMDAwMCBuIAowMDAwMDAwNDE1IDAwMDAwIG4gCjAwMDAwMDA0NzAgMDAwMDAgbiAK
 MDAwMDAwMDUxOSAwMDAwMCBuIAowMDAwMDAwNjAwIDAwMDAwIG4gCnRyYWlsZXIKPDwvU2l6ZSA5
 L1Jvb3QgMSAwIFIvSW5mbyA4IDAgUj4+CnN0YXJ0eHJlZgowCiUlRU9GCg
-      `.replace(/\s+/g, ''); // remove whitespace/newlines
+      `.replace(/\s+/g, ''); // Clean up whitespace/newlines
 
       this.downloadBase64Pdf(base64Pdf, 'example.pdf');
     },
 
     downloadBase64Pdf(base64String, filename) {
-      const linkSource = `data:application/pdf;base64,${base64String}`;
+      // Convert base64 to binary
+      const byteCharacters = atob(base64String);
+      const byteNumbers = new Array(byteCharacters.length);
+      for (let i = 0; i < byteCharacters.length; i++) {
+        byteNumbers[i] = byteCharacters.charCodeAt(i);
+      }
+      const byteArray = new Uint8Array(byteNumbers);
+
+      // Create a Blob from binary data
+      const blob = new Blob([byteArray], { type: 'application/pdf' });
+
+      // Create a URL for the Blob
+      const blobUrl = URL.createObjectURL(blob);
+
+      // Create and click the download link
       const downloadLink = document.createElement('a');
-      downloadLink.href = linkSource;
+      downloadLink.href = blobUrl;
       downloadLink.download = filename;
 
-      // Required for Safari
       document.body.appendChild(downloadLink);
       downloadLink.click();
       document.body.removeChild(downloadLink);
+
+      // Free memory
+      URL.revokeObjectURL(blobUrl);
     }
   }
 };
