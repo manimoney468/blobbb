@@ -125,7 +125,7 @@ export default {
           let link = document.createElement("a");
           link.href = url;
           link.download = name;
-          // document.body.appendChild(a);
+          document.body.appendChild(a);
           link.click();
           // document.body.removeChild(a);
           // setTimeout(() => URL.revokeObjectURL(url), 5000); // Clean up URL
