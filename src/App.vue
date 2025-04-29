@@ -119,12 +119,13 @@ export default {
         // Detect Safari
         const isSafari = /^((?!chrome|android).)*safari/i.test(navigator.userAgent);
         console.log("Is Safari:", isSafari);  // Log to check if it's Safari
+        const isChrome = /Chrome/.test(navigator.userAgent) && /Google Inc/.test(navigator.vendor);
 
-        if (isSafari) {
+        if (isChrome) {
           // Fallback for Safari: Use download link instead of opening in new tab
           const a = document.createElement("a");
           a.href = url;
-          a.download = name || "document.pdf"; // Fallback name
+          a.download = name || "document.pdf";
           document.body.appendChild(a);
           a.click();
           document.body.removeChild(a);
