@@ -78,7 +78,7 @@ export default {
 <template>
   <div>
     <button @click="downloadPdf('SALE_AGREEMENT', 'TestDocument.pdf')">
-      Download PDF
+      Download PF
     </button>
   </div>
 </template>
