@@ -1,6 +1,6 @@
 <template>
   <div>
-    <button @click="downloadPdf">Download </button>
+    <button @click="downloadPdf">Download --------- </button>
   </div>
 </template>
 
