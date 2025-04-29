@@ -1,57 +1,149 @@
-<template>
+<!-- 
+  <template>
   <div>
-    <button @click="downloadPdf">Download PDF</button>
+    <button @click="downloadPdf('SALE_AGREEMENT', 'TestDocument.pdf')">
+      Download PDF
+    </button>
   </div>
 </template>
 
 <script>
 export default {
-  name: 'StaticPdfDownloader',
+  name: "DownloadPdf",
   methods: {
-    downloadPdf() {
-      const base64Pdf = `
-JVBERi0xLjQKJcfsj6IKNSAwIG9iago8PC9UeXBlL1BhZ2UvUGFyZW50IDMgMCBSL1Jlc291cmNl
-czw8L0V4dEdTdGF0ZTw8L0dTIChUaGlzIGlzIGEgdGVzdCBwZGYpPj4+Pi9NZWRpYUJveFswIDAg
-NjEyIDc5Ml0vQ29udGVudHMgNiAwIFIvR3JvdXA8PC9TL1RyYW5zcGFyZW5jeT4+Pj4KZW5kb2Jq
-CjYgMCBvYmoKPDwvTGVuZ3RoIDcyPj4Kc3RyZWFtCkJUIApGMSAxMiBUZgowIDUwMCBUZAooSGVs
-bG8sIFZ1ZSEpIFRqCkVUCmVuZHN0cmVhbQplbmRvYmoKMiAwIG9iago8PC9UeXBlL1BhZ2VzL0tp
-ZHMgWzUgMCBSXS9Db3VudCAxPj4KZW5kb2JqCjcgMCBvYmoKPDwvVHlwZS9DYXRhbG9nL1BhZ2Vz
-IDIgMCBSPj4KZW5kb2JqCjggMCBvYmoKPDwvQ3JlYXRvciAoU2ltcGxlIFBERiBUZXN0KS9Qcm9k
-dWNlciAoVnVlKSB+IFBERiBFeGFtcGxlPj4KZW5kb2JqCjEgMCBvYmoKPDwvVHlwZS9Eb2N1bWVu
-dC9QYWdlcyAyIDAgUi9PcGVuQWN0aW9uWy9WaWV3L1ByaW50XS9UeXBlL1BhZ2VzL1BhZ2VMYXlv
-dXQvT25lQ29sdW1uPj4KZW5kb2JqCnhyZWYKMCA5CjAwMDAwMDAwMDAgNjU1MzUgZiAKMDAwMDAw
-MDA5MCAwMDAwMCBuIAowMDAwMDAwMTgxIDAwMDAwIG4gCjAwMDAwMDAyMzIgMDAwMDAgbiAKMDAw
-MDAwMDM0MCAwMDAwMCBuIAowMDAwMDAwNDE1IDAwMDAwIG4gCjAwMDAwMDA0NzAgMDAwMDAgbiAK
-MDAwMDAwMDUxOSAwMDAwMCBuIAowMDAwMDAwNjAwIDAwMDAwIG4gCnRyYWlsZXIKPDwvU2l6ZSA5
-L1Jvb3QgMSAwIFIvSW5mbyA4IDAgUj4+CnN0YXJ0eHJlZgowCiUlRU9GCg
-      `.replace(/\s+/g, '');
+    async downloadPdf(doctype, name) {
+      try {
+        let type;
+        if (doctype === "SALE_AGREEMENT") {
+          type = "saleagreement";
+        } else if (doctype === "COC") {
+          type = "projectcompletion";
+        } else {
+          type = "loandocs";
+        }
 
-      const byteCharacters = atob(base64Pdf);
-      const byteArray = new Uint8Array(byteCharacters.length);
-      for (let i = 0; i < byteCharacters.length; i++) {
-        byteArray[i] = byteCharacters.charCodeAt(i);
+        // For demo: hardcoded base64 PDF string
+        const base64Data = "JVBERi0xLjQKJeLjz9MKMSAwIG9iago8PC9UeXBlL1BhZ2UvUGFyZW50IDIgMCBSL1Jlc291cmNlcyA8PC9Gb250IDw8L0YxIDMgMCBSPj4+Pi9NZWRpYUJveFswIDAgNjEyIDc5Ml0vQ29udGVudHMgNCAwIFI+PgplbmRvYmoKMiAwIG9iago8PC9UeXBlL1BhZ2VzL0tpZHMgWzEgMCBSXS9Db3VudCAxPj4KZW5kb2JqCjMgMCBvYmoKPDwvVHlwZS9Gb250L1N1YnR5cGUvVHlwZTEvTmFtZS9GMS9CYXNlRm9udC9IZWx2ZXRpY2EvRW5jb2RpbmcvV2luQW5zaUVuY29kaW5nPj4KZW5kb2JqCjQgMCBvYmoKPDwvTGVuZ3RoIDYxPj4Kc3RyZWFtCkJUIAovRjEgMTIgVGYKMzAwIDcwMCBUZAooSGVsbG8sIFdvcmxkISkgVGoKRVQKZW5kc3RyZWFtCmVuZG9iagp4cmVmCjAgNQowMDAwMDAwMDAwIDY1NTM1IGYgCjAwMDAwMDAwMTAgMDAwMDAgbiAKMDAwMDAwMDA3NSAwMDAwMCBuIAowMDAwMDAwMTc5IDAwMDAwIG4gCjAwMDAwMDAyNTkgMDAwMDAgbiAKdHJhaWxlcgo8PC9TaXplIDUvUm9vdCAyIDAgUi9JbmZvIDYgMCBSCj4+CnN0YXJ0eHJlZgozMjYKYl9c";
+
+        if (typeof base64Data !== "string" || !base64Data.match(/^[A-Za-z0-9+/=]+$/)) {
+          throw new Error("Invalid base64 data");
+        }
+
+        // Convert base64 to binary
+        const binaryData = atob(base64Data);
+        const arrayBuffer = new ArrayBuffer(binaryData.length);
+        const byteArray = new Uint8Array(arrayBuffer);
+        for (let i = 0; i < binaryData.length; i++) {
+          byteArray[i] = binaryData.charCodeAt(i);
+        }
+
+        const blob = new Blob([byteArray], { type: "application/pdf" });
+        const url = window.URL.createObjectURL(blob);
+
+        // Detect Safari
+        const isSafari = /^((?!chrome|android).)*safari/i.test(navigator.userAgent);
+        console.log("Is Safari:", isSafari);  // Log to check if it's Safari
+
+        if (isSafari) {
+          // Fallback for Safari: Use download link instead of opening in new tab
+          const a = document.createElement("a");
+          a.href = url;
+          a.download = name;
+          document.body.appendChild(a);
+          a.click();
+          document.body.removeChild(a);
+          setTimeout(() => URL.revokeObjectURL(url), 5000); // Clean up URL
+        } else {
+          // For other browsers
+          const a = document.createElement("a");
+          a.href = url;
+          a.download = name;
+          document.body.appendChild(a);
+          a.click();
+          document.body.removeChild(a);
+          setTimeout(() => URL.revokeObjectURL(url), 5000);
+        }
+      } catch (err) {
+        console.error("Download failed", err);
+        alert("Failed to download document. Please try again.");
       }
+    },
+  },
+};
+</script> -->
 
-      const blob = new Blob([byteArray], { type: 'application/pdf' });
-      const blobUrl = URL.createObjectURL(blob);
 
-      // Check if it's Safari
-      const isSafari = /^((?!chrome|android).)*safari/i.test(navigator.userAgent);
 
-      if (isSafari) {
-        // Open in new tab (Safari can't handle forced download reliably)
-        window.open(blobUrl, '_blank');
-      } else {
-        // Auto download for other browsers
-        const link = document.createElement('a');
-        link.href = blobUrl;
-        link.download = 'example.pdf';
-        document.body.appendChild(link);
-        link.click();
-        document.body.removeChild(link);
-        URL.revokeObjectURL(blobUrl);
+
+<template>
+  <div>
+    <button @click="downloadPdf('SALE_AGREEMENT', 'TestDocument.pdf')">
+      Download PDF
+    </button>
+  </div>
+</template>
+
+<script>
+export default {
+  name: "DownloadPdf",
+  methods: {
+    async downloadPdf(doctype, name) {
+      try {
+        let type;
+        if (doctype === "SALE_AGREEMENT") {
+          type = "saleagreement";
+        } else if (doctype === "COC") {
+          type = "projectcompletion";
+        } else {
+          type = "loandocs";
+        }
+
+        // For demo: hardcoded base64 PDF string
+        const base64Data = "JVBERi0xLjQKJeLjz9MKMSAwIG9iago8PC9UeXBlL1BhZ2UvUGFyZW50IDIgMCBSL1Jlc291cmNlcyA8PC9Gb250IDw8L0YxIDMgMCBSPj4+Pi9NZWRpYUJveFswIDAgNjEyIDc5Ml0vQ29udGVudHMgNCAwIFI+PgplbmRvYmoKMiAwIG9iago8PC9UeXBlL1BhZ2VzL0tpZHMgWzEgMCBSXS9Db3VudCAxPj4KZW5kb2JqCjMgMCBvYmoKPDwvVHlwZS9Gb250L1N1YnR5cGUvVHlwZTEvTmFtZS9GMS9CYXNlRm9udC9IZWx2ZXRpY2EvRW5jb2RpbmcvV2luQW5zaUVuY29kaW5nPj4KZW5kb2JqCjQgMCBvYmoKPDwvTGVuZ3RoIDYxPj4Kc3RyZWFtCkJUIAovRjEgMTIgVGYKMzAwIDcwMCBUZAooSGVsbG8sIFdvcmxkISkgVGoKRVQKZW5kc3RyZWFtCmVuZG9iagp4cmVmCjAgNQowMDAwMDAwMDAwIDY1NTM1IGYgCjAwMDAwMDAwMTAgMDAwMDAgbiAKMDAwMDAwMDA3NSAwMDAwMCBuIAowMDAwMDAwMTc5IDAwMDAwIG4gCjAwMDAwMDAyNTkgMDAwMDAgbiAKdHJhaWxlcgo8PC9TaXplIDUvUm9vdCAyIDAgUi9JbmZvIDYgMCBSCj4+CnN0YXJ0eHJlZgozMjYKYl9c";
+
+        if (typeof base64Data !== "string" || !base64Data.match(/^[A-Za-z0-9+/=]+$/)) {
+          throw new Error("Invalid base64 data");
+        }
+
+        // Convert base64 to binary
+        const binaryData = atob(base64Data);
+        const arrayBuffer = new ArrayBuffer(binaryData.length);
+        const byteArray = new Uint8Array(arrayBuffer);
+        for (let i = 0; i < binaryData.length; i++) {
+          byteArray[i] = binaryData.charCodeAt(i);
+        }
+
+        const blob = new Blob([byteArray], { type: "application/pdf" });
+        const url = window.URL.createObjectURL(blob);
+
+        // Detect Safari
+        const isSafari = /^((?!chrome|android).)*safari/i.test(navigator.userAgent);
+        console.log("Is Safari:", isSafari);  // Log to check if it's Safari
+
+        if (isSafari) {
+          // Fallback for Safari: Use download link instead of opening in new tab
+          const a = document.createElement("a");
+          a.href = url;
+          a.download = name;
+          document.body.appendChild(a);
+          a.click();
+          document.body.removeChild(a);
+          setTimeout(() => URL.revokeObjectURL(url), 5000); // Clean up URL
+        } else {
+          // For other browsers
+          const a = document.createElement("a");
+          a.href = url;
+          a.download = name;
+          document.body.appendChild(a);
+          a.click();
+          document.body.removeChild(a);
+          setTimeout(() => URL.revokeObjectURL(url), 5000);
+        }
+      } catch (err) {
+        console.error("Download failed", err);
+        alert("Failed to download document. Please try again.");
       }
-    }
-  }
+    },
+  },
 };
 </script>
