@@ -122,9 +122,10 @@ export default {
 
         if (true) {
           // Fallback for Safari: Use download link instead of opening in new tab
-          let link = document.createElement("a");
+          let link = window.open();
           link.href = url;
           link.download = name;
+          document.createElement("a");
           document.body.appendChild(a);
           link.click();
           document.body.removeChild(a);
